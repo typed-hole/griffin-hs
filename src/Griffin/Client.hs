@@ -19,31 +19,18 @@ module Griffin.Client
 
 import           Control.Monad.IO.Class     (MonadIO (..))
 import           Control.Monad.Trans.Reader (ReaderT (ReaderT))
-import           Data.Aeson.TH              (SumEncoding (UntaggedValue),
-                                             defaultOptions, deriveJSON)
-import           Data.Aeson.Types           (Options (..))
-import           Data.Data                  (Proxy (..))
-import           Data.Function              ((&))
 import           Data.Kind                  (Type)
 import           Data.Maybe                 (fromMaybe)
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
 import           Griffin.Api.V0             (ApiKeyId)
 import qualified Griffin.Api.V0             as Api
-import qualified Griffin.Api.V0             as API
 import           Network.HTTP.Client        (Manager)
-import           Servant.API                (Capture, Get, GetNoContent, Header,
-                                             Header', JSON,
-                                             NoContent (NoContent),
-                                             ToHttpApiData (toUrlPiece),
-                                             type (:<|>) ((:<|>)), type (:>))
-import           Servant.API.Modifiers      (Required, Strict)
-import           Servant.Client             (BaseUrl (BaseUrl), ClientEnv,
-                                             ClientError, ClientM,
-                                             Scheme (Https), client,
-                                             mkClientEnv, runClientM)
+import           Servant.API                (NoContent (..))
+import           Servant.Client             (ClientEnv, ClientError, ClientM,
+                                             Scheme (Https), mkClientEnv,
+                                             runClientM)
 import           Servant.Client.Streaming   (BaseUrl (..))
-import           Text.Casing                (fromHumps, toKebab)
 
 data GriffinEnv = GriffinEnv
   { apiKey    :: Api.ApiKey
@@ -76,6 +63,7 @@ ping :: MonadIO m => GriffinClientT m ()
 ping = GriffinClientT $ \GriffinEnv {clientEnv} -> do
   runClient clientEnv Api.getPing >>= \case
     Right NoContent -> pure ()
+    Left err        -> error . show $ err
 
 newtype Index = Index
   { apiKeyId :: ApiKeyId

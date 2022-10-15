@@ -18,39 +18,54 @@ maintainer:         franssonkai@gmail.com
 category:           Web
 extra-source-files: CHANGELOG.md
 
+common warnings
+  ghc-options:
+    -Wall
+    -Wincomplete-uni-patterns
+    -Wincomplete-record-updates
+    -Wpartial-fields
+    -Wmissing-home-modules
+    -Widentities
+    -Wredundant-constraints
+    -Wcpp-undef
+    -Wmissing-export-lists
+    -Wmonomorphism-restriction
+    -Wunused-packages
+
 library
-    exposed-modules:
-      Griffin.Api.V0
-      Griffin.Client
+  import: warnings
+  exposed-modules:
+    Griffin.Api.V0
+    Griffin.Client
 
-    -- Modules included in this library but not exported.
-    -- other-modules:
+  -- Modules included in this library but not exported.
+  -- other-modules:
 
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
-    build-depends:
-        aeson
-      , base
-      , casing
-      , http-client
-      , servant
-      , servant-client
-      , text
-      , transformers
-    hs-source-dirs:   src
-    default-language: GHC2021
+  -- LANGUAGE extensions used by modules in this package.
+  -- other-extensions:
+  build-depends:
+      aeson
+    , base
+    , http-client
+    , servant
+    , servant-client
+    , text
+    , transformers
+  hs-source-dirs:   src
+  default-language: GHC2021
 
 test-suite griffin-hs-test
-    default-language: GHC2021
-    type:             exitcode-stdio-1.0
-    hs-source-dirs:   test
-    main-is:          Main.hs
-    other-modules:
-      Griffin.ApiTest
-    build-depends:
-        griffin-hs
+  import: warnings
+  default-language: GHC2021
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Main.hs
+  other-modules:
+    Griffin.ApiTest
+  build-depends:
+      griffin-hs
 
-      , base
-      , hspec
-      , http-client-tls
-      , text
+    , base
+    , hspec
+    , http-client-tls
+    , text

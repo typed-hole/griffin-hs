@@ -15,31 +15,16 @@ module Griffin.Api.V0
   , getApiKey
   , getOrganization
   ) where
-import           Control.Monad.IO.Class     (MonadIO (..))
-import           Control.Monad.Trans.Reader (ReaderT (ReaderT))
-import           Data.Aeson                 (FromJSON, Value, withObject, (.:))
-import           Data.Aeson.TH              (SumEncoding (UntaggedValue),
-                                             defaultOptions, deriveJSON)
-import           Data.Aeson.Types           (FromJSON (parseJSON), Options (..),
-                                             Parser)
-import           Data.Data                  (Proxy (..))
-import           Data.Function              ((&))
-import           Data.Kind                  (Type)
-import           Data.Text                  (Text)
-import qualified Data.Text                  as T
-import           Network.HTTP.Client        (Manager)
-import           Servant.API                (Capture, Get, GetNoContent, Header,
-                                             Header', JSON,
-                                             NoContent (NoContent),
-                                             ToHttpApiData (toUrlPiece),
-                                             type (:<|>) ((:<|>)), type (:>))
-import           Servant.API.Modifiers      (Required, Strict)
-import           Servant.Client             (BaseUrl (BaseUrl), ClientEnv,
-                                             ClientError, ClientM,
-                                             Scheme (Https), client,
-                                             mkClientEnv, runClientM)
-import           Servant.Client.Streaming   (BaseUrl (..))
-import           Text.Casing                (fromHumps, toKebab)
+import           Data.Aeson            (FromJSON, Value, withObject, (.:))
+import           Data.Aeson.Types      (FromJSON (parseJSON), Parser)
+import           Data.Data             (Proxy (..))
+import           Data.Text             (Text)
+import           Servant.API           (Capture, Get, GetNoContent, Header',
+                                        JSON, NoContent,
+                                        ToHttpApiData (toUrlPiece),
+                                        type (:<|>) ((:<|>)), type (:>))
+import           Servant.API.Modifiers (Required, Strict)
+import           Servant.Client        (ClientM, client)
 
 newtype ApiKey = ApiKey Text
 
@@ -102,7 +87,7 @@ newtype OrganizationId = OrganizationId Text
   deriving (Show, Eq, ToHttpApiData) via Text
 
 type V0 =
-       "ping" :> GetNoContent
+                "ping" :> GetNoContent
   :<|> Authd :> "index" :> Get '[JSON] GetIndex
   :<|> Authd :> "api-keys" :> Capture "api-key-id" ApiKeyId :> Get '[JSON] GetApiKey
   :<|> Authd :> "organizations" :> Capture "organization-id" OrganizationId :> Get '[JSON] GetOrganization

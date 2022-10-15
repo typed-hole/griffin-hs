@@ -3,17 +3,15 @@
 module Griffin.ApiTest (tests) where
 
 import qualified Data.Text               as T
-import           Griffin.Api.V0          (ApiKeyId (..))
 import qualified Griffin.Api.V0          as Api
-import           Griffin.Client          (ApiKeyInfo (..), GriffinClientT,
-                                          Index (..), Organization (..),
-                                          getApiKey, getOrganization, index,
-                                          ping, runGriffinClientT)
-import           Network.HTTP.Client.TLS (mkManagerSettings, newTlsManager)
+import           Griffin.Client          (ApiKeyInfo (..), Index (..),
+                                          Organization (..), getApiKey,
+                                          getOrganization, index, ping,
+                                          runGriffinClientT)
+import           Network.HTTP.Client.TLS (newTlsManager)
 import           System.Environment      (getEnv)
-import           Test.Hspec              (Spec, describe, example, hspec, it,
-                                          parallel, pendingWith, runIO,
-                                          shouldBe, xit)
+import           Test.Hspec              (Spec, describe, example, it, parallel,
+                                          runIO)
 
 tests :: Spec
 tests = do
